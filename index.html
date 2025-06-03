@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TextBook Management System</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Library Management System</h1>
+
+    <section>
+        <h2>Books</h2>
+        <form id="bookForm">
+            <label for="bookTitle">
+                <input type="text" id="bookTitle" placeholder="Title" required />
+            </label>
+            <label for="bookAuthor">
+                <input type="text" id="bookAuthor" placeholder="Author" required />
+            </label>
+            <button type="submit">Add Book</button>
+        </form>
+        <table>
+            <thead>
+            <tr><th>Title</th><th>Author</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="bookTable">
+            <td colspan="3" style="text-align: center">No Book data available</td>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Members</h2>
+        <form id="memberForm">
+            <label for="memberName"></label><input type="text" id="memberName" placeholder="Name" required />
+            <button type="submit">Add Member</button>
+        </form>
+        <table>
+            <thead>
+            <tr><th>Name</th><th>Borrowed Book</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="memberTable">
+            <td colspan="3" style="text-align: center">No Members data available</td>
+            </tbody>
+        </table>
+    </section>
+</div>
+<script src="dist/app.js"></script>
+</body>
+</html>
