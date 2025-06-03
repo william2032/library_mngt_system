@@ -100,7 +100,7 @@ function getBookOptions(memberId: number): string {
     <select onchange="borrowBook(${memberId}, parseInt(this.value))">
         <option disabled selected> Borrow Book</option>
         ${options}
-     </select> ` : 'No book found';
+     </select> ` : 'Add Book';
 }
 
 //return books

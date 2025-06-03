@@ -2,13 +2,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
     background-color: #f9f9f9;
     color: #333;
     padding: 20px;
+    line-height: 1.6;
 }
 
 .container {
@@ -17,24 +18,38 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
+h1 {
     color: #4a90e2;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+h2 {
+    color: #4a90e2;
+    margin: 20px 0 15px;
+    font-size: 1.4em;
 }
 
 form {
     margin-bottom: 20px;
     display: flex;
     gap: 10px;
+    align-items: flex-end;
     flex-wrap: wrap;
 }
-
+label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 input {
     padding: 10px;
+    width: 60%;
     flex: 1;
+    min-width: 250px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
@@ -42,10 +57,11 @@ input {
 button {
     padding: 10px 20px;
     background: #4a90e2;
+    cursor: pointer;
     color: white;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
+    min-width: 100px;
     transition: background 0.3s;
 }
 
@@ -63,13 +79,51 @@ th, td {
     text-align: left;
     padding: 10px;
     border-bottom: 1px solid #eee;
+    vertical-align: middle;
 }
 
-@media (max-width: 600px) {
+th {
+    background: #f1f1f1;
+    font-weight: 600;
+}
+
+td.actions {
+    text-align: center;
+}
+
+td.actions button {
+    margin: 0 5px;
+    min-width: 70px;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    min-width: 150px;
+}
+
+section {
+    margin-bottom: 80px;
+}
+@media (max-width: 768px) {
+    .container {
+    padding: 15px;
+}
     form {
         flex-direction: column;
+        align-items: stretch;
     }
     input, button {
         width: 100%;
+        margin-bottom: 10px;
+    }
+    button {
+        margin-bottom: 0;
+    }
+    td.actions button {
+        width: 100%;
+        margin: 10px 0;
     }
 }
