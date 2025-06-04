@@ -16,7 +16,17 @@ class Member {
 }
 
 
-let books: Book[] =  JSON.parse(localStorage.getItem('books') || '[]');
+let books: Book[] =  JSON.parse(localStorage.getItem('books') || 'null') || [
+    new Book(1, "Algorithms For Dummies", "John Paul Mueller", null),
+    new Book(2, "Algorithms to Live By", "Brian Christian", null),
+    new Book(3, "The Pragmatic Programmer", "Andrew Hunt & David Thomas", null),
+    new Book(4, "Introduction to Computing Systems", "Yale Patt", null),
+    new Book(5, "Computer Systems: Digital Design and Fundamentals", "Author Unknown", null),
+    new Book(6, "Computer Science Illuminated", "Nell Dale", null),
+    new Book(7, "Data Structures and Algorithms Made Easy", "Narasimha Karumanchi", null),
+    new Book(8, "Efficient Caching Algorithms", "Author Unknown", null),
+    new Book(9, "Computer Organization and Design", "David A. Patterson", null),
+];
 let members: Member[] = JSON.parse(localStorage.getItem('members') || '[]');
 let bookId = books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1;
 let memberId = members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1;
@@ -42,9 +52,9 @@ function renderBooks() {
         const row = document.createElement("tr");
         const borrower = members.find(m => m.id === book.borrowedBy);
         row.innerHTML = `
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td>${borrower ? 'Borrowed by ' + borrower.name : 'Available'}</td>
+            <td data-label="Title">${book.title}</td>
+            <td data-label="Author">${book.author}</td>
+            <td data-label="Status">${borrower ? 'Borrowed by ' + borrower.name : 'Available'}</td>
             <td><button class="delete-book" data-id="${book.id}">Remove</button></td>
         `;
         bookTable.appendChild(row);
