@@ -70,12 +70,16 @@ button:hover {
 }
 
 table {
+    justify-content: space-around;
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 30px;
-}
+    gap: 10px;
 
+}
+.memberTable td
 th, td {
+
     text-align: left;
     padding: 10px;
     border-bottom: 1px solid #eee;
@@ -89,6 +93,7 @@ th {
 
 td.actions {
     text-align: center;
+
 }
 
 td.actions button {
