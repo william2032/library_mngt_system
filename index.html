@@ -24,14 +24,16 @@
             </label>
             <button type="submit">Add Book</button>
         </form>
-        <table>
-            <thead>
-            <tr><th>Title</th><th>Author</th><th>Status</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="bookTable">
-            <td colspan="3" style="text-align: center">No Book data available</td>
-            </tbody>
-        </table>
+        <div class="book-container">
+            <table class="bookTable">
+                <thead>
+                <tr><th>Title</th><th>Author</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="bookTable">
+                <td colspan="3" style="text-align: center">No Book data available</td>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <section>
@@ -42,12 +44,12 @@
             </label>
             <button type="submit">Add Member</button>
         </form>
-        <table>
+        <table class="memberTable">
             <thead>
             <tr><th>Name</th><th>Borrowed Book</th><th>Actions</th></tr>
             </thead>
             <tbody id="memberTable">
-            <td colspan="3" style="text-align: center">No Members data available</td>
+            <td></td>
             </tbody>
         </table>
     </section>
