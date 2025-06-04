@@ -11,11 +11,11 @@ class Book {
 }
 
 class Member {
+    public borrowedBooksId: number[] = [];
+
     constructor(
         public id: number,
-        public name: string,
-        public borrowedBookId: number | null
-    ) {
+        public name: string) {
     }
 }
 
@@ -40,10 +40,11 @@ function renderBooks() {
     bookTable.innerHTML = '';
     books.forEach(book => {
         const row = document.createElement("tr");
+        const borrower = members.find(m => m.id === book.borrowedBy);
         row.innerHTML = `
             <td>${book.title}</td>
             <td>${book.author}</td>
-            <td>${book.borrowedBy !== null ? 'Borrowed' : 'Available'}</td>
+            <td>${borrower ? 'Borrowed by ' + borrower.name : 'Available'}</td>
             <td><button class="delete-book" data-id="${book.id}">Remove</button></td>
         `;
         bookTable.appendChild(row);
@@ -70,11 +71,18 @@ bookForm.onsubmit = (e: SubmitEvent) => {
     renderMembers();
 }
 
+document.querySelectorAll('.delete-book').forEach(button => {
+    button.addEventListener('click', () => {
+        const id:number = parseInt(button.getAttribute('data-id')!);
+        deleteBook(id);
+    })
+})
+
 //delete book
 function deleteBook(id: number) {
     books = books.filter(book => book.id !== id);
     members.forEach(member => {
-        if (member.borrowedBookId === id) member.borrowedBookId = null;
+        member.borrowedBooksId = member.borrowedBooksId.filter(bookId => bookId !== id);
     });
     renderBooks();
     renderMembers();
@@ -85,7 +93,7 @@ function borrowBook(memberId: number, bookId: number) {
     const member = members.find(m => m.id === memberId);
     const book = books.find(b => b.id === bookId);
     if (member && book && book.borrowedBy === null) {
-        member.borrowedBookId = book.id;
+        member.borrowedBooksId.push(book.id);
         book.borrowedBy = member.id;
         renderBooks();
         renderMembers();
@@ -104,53 +112,68 @@ function getBookOptions(memberId: number): string {
 }
 
 //return books
-function returnBooks(memberId: number) {
+function returnBook(memberId: number) {
     const member = members.find(m => m.id === memberId);
-    const book = books.find(b => b.id === member?.borrowedBookId)
-    if (member && book) {
-        member.borrowedBookId = null;
-        book.borrowedBy = null;
-        renderBooks();
+
+    if (member) {
+        member.borrowedBooksId.forEach(bookId => {
+            const book = books.find(b => b.id === bookId);
+            if (book) book.borrowedBy = null;
+        });
+        member.borrowedBooksId = [];
         renderMembers();
+        renderBooks();
     }
 }
 
 //displays members
 function renderMembers() {
- memberTable.innerHTML = '';
- members.forEach(member => {
-     const  borrowedBook = books.find(b => b.id === member.borrowedBookId);
-     const row = document.createElement("tr");
-     row.innerHTML = `
+    memberTable.innerHTML = '';
+    members.forEach(member => {
+        const borrowedBooks = member.borrowedBooksId.map(id => books.find(b => b.id === id)?.title)
+            .filter(Boolean).join(', ')
+        const row = document.createElement("tr");
+        row.innerHTML = `
         <td>${member.name}</td>
-          <td>${ borrowedBook ? borrowedBook.title : 'No Book'}</td>
+          <td>${borrowedBooks || 'No books borrowed'}</td>
             <td>
-                  ${ borrowedBook? `<button onclick="returnBooks(${member.id})">Return</button>`  : getBookOptions(member.id) }
-             <button onclick="deleteMember(${member.id})">Delete</button>
-             </td>
+               ${getBookOptions(member.id)}
+        <button onclick="returnBook(${member.id})">Return All</button>
+        <button onclick="deleteMember(${member.id})">Delete</button>
+      </td>
 `;
-     memberTable.appendChild(row);
- });
+        memberTable.appendChild(row);
+    });
 
 //add member
-memberForm.onsubmit = (e: SubmitEvent) => {
+    memberForm.onsubmit = (e: SubmitEvent) => {
         e.preventDefault();
-        members.push(new Member(memberId++, memberName.value, null));
+        if (!memberName.value.trim()) {
+            alert("Please enter a valid name");
+            return;
+        }
+        members.push(new Member(memberId++, memberName.value));
         memberForm.reset();
         renderMembers();
     };
 }
+
 //delete a member
 function deleteMember(id: number) {
-    const member = members.find(m => m.id === id) ;
-    if( !member) return;
-    if (member?.borrowedBookId !== null) {
-        const book = books.find(b => b.id === member.borrowedBookId);
-        if (book) book.borrowedBy = null;
+    const member = members.find(m => m.id === id);
+    if (!member) return;
+
+    if (confirm("Are you sure to delete user?")) {
+        member.borrowedBooksId.forEach(bookId => {
+            const  book = books.find(b => b.id === bookId);
+            if ( book) book.borrowedBy = null;
+        })
+
+        members = members.filter(m => m.id !== id)
+        renderMembers();
+        renderBooks();
     }
-    members = members.filter(m => m.id !== id)
-    renderMembers();
-    renderBooks();
+
 }
 
 renderBooks();
