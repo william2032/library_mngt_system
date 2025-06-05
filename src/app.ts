@@ -4,19 +4,21 @@ class Book {
         public title: string,
         public author: string,
         public borrowedBy: number | null
-    ) {}
+    ) {
+    }
 }
 
 class Member {
     public borrowedBooksId: number[] = [];
+
     constructor(
         public id: number,
         public name: string) {
     }
 }
 
+let book: Book[] = [
 
-let books: Book[] =  JSON.parse(localStorage.getItem('books') || 'null') || [
     new Book(1, "Algorithms For Dummies", "John Paul Mueller", null),
     new Book(2, "Algorithms to Live By", "Brian Christian", null),
     new Book(3, "The Pragmatic Programmer", "Andrew Hunt & David Thomas", null),
@@ -26,7 +28,9 @@ let books: Book[] =  JSON.parse(localStorage.getItem('books') || 'null') || [
     new Book(7, "Data Structures and Algorithms Made Easy", "Narasimha Karumanchi", null),
     new Book(8, "Efficient Caching Algorithms", "Author Unknown", null),
     new Book(9, "Computer Organization and Design", "David A. Patterson", null),
-];
+]
+
+let books: Book[] = JSON.parse(localStorage.getItem('books') || 'null') || [];
 let members: Member[] = JSON.parse(localStorage.getItem('members') || '[]');
 let bookId = books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1;
 let memberId = members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1;
@@ -40,10 +44,6 @@ const memberForm = document.getElementById("memberForm") as HTMLFormElement;
 const memberName = document.getElementById("memberName") as HTMLInputElement;
 const memberTable = document.getElementById("memberTable") as HTMLElement;
 
-function saveToLocalStorage(): void {
-    localStorage.setItem('books', JSON.stringify(books));
-    localStorage.setItem('members', JSON.stringify(members));
-}
 
 // render books
 function renderBooks() {
@@ -59,6 +59,16 @@ function renderBooks() {
         `;
         bookTable.appendChild(row);
     });
+
+
+    //delete book
+    document.querySelectorAll('.delete-book').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = parseInt(button.getAttribute('data-id')!);
+            deleteBook(id);
+        });
+    });
+
 }
 
 //add books
@@ -69,19 +79,10 @@ bookForm.onsubmit = (e: SubmitEvent) => {
         return;
     }
     books.push(new Book(bookId++, bookTitle.value, bookAuthor.value, null));
-    saveToLocalStorage();
     bookForm.reset();
     renderBooks();
     renderMembers();
 }
-
-//delete book
-document.querySelectorAll('.delete-book').forEach(button => {
-    button.addEventListener('click', () => {
-        const id = parseInt(button.getAttribute('data-id')!);
-        deleteBook(id);
-    });
-});
 
 
 function deleteBook(id: number) {
@@ -89,7 +90,6 @@ function deleteBook(id: number) {
     members.forEach(member => {
         member.borrowedBooksId = member.borrowedBooksId.filter(bookId => bookId !== id);
     });
-    saveToLocalStorage();
     renderBooks();
     renderMembers();
 }
@@ -102,7 +102,6 @@ function borrowBook(memberId: number, bookId: number) {
     if (member && book && book.borrowedBy === null) {
         member.borrowedBooksId.push(book.id);
         book.borrowedBy = member.id;
-        saveToLocalStorage();
         renderBooks();
         renderMembers();
     }
@@ -129,7 +128,6 @@ function returnBook(memberId: number) {
             if (book) book.borrowedBy = null;
         });
         member.borrowedBooksId = []
-        saveToLocalStorage();
         renderMembers();
         renderBooks();
     }
@@ -138,7 +136,7 @@ function returnBook(memberId: number) {
 //displays members
 function renderMembers() {
     memberTable.innerHTML = ' ';
-    if ( members.length === 0 ) {
+    if (members.length === 0) {
         memberTable.innerHTML = '<tr><td colspan="3"> No Members data available</td></tr>';
     }
     members.forEach(member => {
@@ -165,7 +163,6 @@ function renderMembers() {
             return;
         }
         members.push(new Member(memberId++, memberName.value));
-        saveToLocalStorage();
         memberForm.reset();
         renderMembers();
     };
@@ -183,7 +180,6 @@ function deleteMember(id: number) {
         })
 
         members = members.filter(m => m.id !== id)
-        saveToLocalStorage();
         renderMembers();
         renderBooks();
     }
